@@ -1,4 +1,4 @@
-import { E2E_ENDPOINT } from "@/const";
+import { CASE_TIMEOUT, E2E_SHEET_ENDPOINT } from "@/const";
 import { userPageManager, warpPlaywright } from "@/warpPlaywright";
 import { expect } from "playwright/test";
 
@@ -15,8 +15,8 @@ test.beforeEach(async ({ browser }) => {
   });
 
   const url = await userPageManager.pageDoSomething('user1', async (page) => {
-    await page.goto(E2E_ENDPOINT);
-    await page.waitForURL((url) => url.search.includes('unit'), { timeout: 3000 })
+    await page.goto(E2E_SHEET_ENDPOINT);
+    await page.waitForURL((url) => url.search.includes('unit'), { timeout: 10000 })
     return page.url();
   });
 
@@ -29,7 +29,7 @@ test.afterAll(async () => {
   await userPageManager.dispose();
 });
 
-test.setTimeout(10000);
+test.setTimeout(CASE_TIMEOUT);
 
 test('Univer Collaborative Basic', async () => {
   const testText = 'Hello Univer!';

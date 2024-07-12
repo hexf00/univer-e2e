@@ -1,5 +1,6 @@
 import { ErrorManager } from "@/ErrorManager";
 import { SheetWarp } from "@/SheetWarp";
+import { CASE_TIMEOUT } from "@/const";
 import { warpPlaywright } from "@/warpPlaywright";
 import { expect } from "playwright/test";
 
@@ -16,13 +17,14 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.afterEach(async ({ page }) => {
+  page.errorManager.assertNoError();
   page.errorManager.dispose()
   page.errorManager = null!
   page.sheetWarp.dispose()
   page.sheetWarp = null!
 });
 
-test.setTimeout(10000);
+test.setTimeout(CASE_TIMEOUT);
 
 test('Univer Sheet Tab', async ({ page }) => {
   const { sheetWarp: sheet } = page;
@@ -45,6 +47,5 @@ test('Univer Sheet Tab', async ({ page }) => {
   await sheet.checkA1('Hello Sheet1');
 
   await sheet.switchTab(count + 1);
-  await sheet.checkA1('Hello Sheet2');
-  page.errorManager.assertNoError();
+  await sheet.checkA1('Hello Sheet2')
 });

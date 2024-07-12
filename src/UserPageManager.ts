@@ -2,6 +2,7 @@ import { initCookie } from './initCookie';
 import { Browser, BrowserContext, Page } from "playwright/test";
 import { ErrorManager } from "./ErrorManager";
 import { logDecorator } from './logDecorator';
+import { DONE_DO_NOT_CLOSE_BROWSER } from './const';
 
 export class UserPageManager {
   browser!: Browser;
@@ -38,6 +39,10 @@ export class UserPageManager {
     return page;
   }
 
+  getPage (name: string) {
+    return this.pages.get(name);
+  }
+
   async pageDoSomething<T> (name: string, fn: (page: Page) => Promise<T>) {
     const page = this.pages.get(name);
     if (!page) {
@@ -50,15 +55,17 @@ export class UserPageManager {
 
     // log errors
     for (const name of this.errors.keys()) {
-      const errorsManager = this.errors.get(name)!; 
+      const errorsManager = this.errors.get(name)!;
       errorsManager.assertNoError();
     }
 
-    for (const context of this.contexts.values()) {
-      try {
-        await context.close();
-      } catch (error) {
-        console.log('Error on context close', error);
+    if (!DONE_DO_NOT_CLOSE_BROWSER) {
+      for (const context of this.contexts.values()) {
+        try {
+          await context.close();
+        } catch (error) {
+          console.log('Error on context close', error);
+        }
       }
     }
 

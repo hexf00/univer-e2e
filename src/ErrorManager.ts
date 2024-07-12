@@ -32,6 +32,27 @@ export class ErrorManager {
     this.disposes.push(() => {
       page.off('console', onConsole);
     });
+
+    const onPageError = (msg :Error) => {
+      onConsole({
+        type: () => 'error',
+        text: () => msg.message,
+        args: () => [],
+        page: () => page,
+        location: () => {
+          return {
+            url: page.url(),
+            lineNumber: 0,
+            columnNumber: 0
+          }
+        }
+      });
+    }
+    page.on('pageerror', onPageError);
+    this.disposes.push(() => {
+      console.log(`\x1b[43mErrorManager dispose page ${this.name}\x1b[0m`);
+      page.off('pageerror', onPageError);
+    });
   }
 
   assertNoError () {

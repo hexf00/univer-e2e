@@ -12,29 +12,42 @@ pnpm install
 
 run with ui
 ```bash
-pnpm e2e --ui
+E2E_SHEET_ENDPOINT=http://localhost:5173/ pnpm e2e --ui -g "Univer Sheet"
+E2E_SHEET_ENDPOINT=http://localhost:5173/ pnpm e2e --ui -g "Univer Sheet"
+
+
+E2E_SHEET_ENDPOINT=http://local.univer.plus:8081/pro-local-umd.html pnpm e2e --headed --ui 
+E2E_SHEET_ENDPOINT=http://local.univer.plus:8080/ pnpm e2e --headed --ui 
 ```
 
 run once
 ```bash
-pnpm e2e
+E2E_SHEET_ENDPOINT=http://localhost:5173/ pnpm e2e -g "Univer Sheet"
 ```
 
 headed
-```
-pnpm e2e --headed
+```bash
+E2E_SHEET_ENDPOINT=http://localhost:5173/ pnpm e2e --headed -g "Univer Sheet"
 ```
 
 run with a regular filter, only run the test with the name contains 'raw load'
 ```bash
-pnpm e2e -g "raw load"
+E2E_SHEET_ENDPOINT=http://localhost:5173/ pnpm e2e -g "Univer Sheet"
 ```
 
 ## Case
 
-1. 2 Collaborative editing with 2 clients
-2. formula input
-3. Error log discovery
+### sheet 
+
+1. [x] 2 Collaborative editing with 2 clients
+2. [ ] formula input
+3. [x] Error log discovery
+4. [x] tabs switch / tabs add
+5. [x] random mouse move / wheel
+
+### doc
+
+1. [ ] base case 
 
 ## How to write a new test
 

@@ -1,5 +1,5 @@
 import { Page, expect } from "playwright/test";
-import { E2E_ENDPOINT, IS_DEV } from "./const";
+import { E2E_SHEET_ENDPOINT, INPUT_DELAY, IS_DEV } from "./const";
 
 export class SheetWarp {
   name: string = '';
@@ -18,7 +18,7 @@ export class SheetWarp {
   
   async init(){
     if(!IS_DEV){
-      await this.page.goto(E2E_ENDPOINT);
+      await this.page.goto(E2E_SHEET_ENDPOINT);
     }
 
     // await this.page.waitForLoadState('domcontentloaded');
@@ -47,7 +47,7 @@ export class SheetWarp {
         y: 29
       }
     });
-    await page.keyboard.type(text, { delay: 200 });
+    await page.keyboard.type(text, { delay: INPUT_DELAY });
     await page.keyboard.press('Enter');
   }
 
