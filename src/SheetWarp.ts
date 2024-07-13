@@ -1,5 +1,6 @@
 import { Page, expect } from "playwright/test";
 import { E2E_SHEET_ENDPOINT, INPUT_DELAY, IS_DEV } from "./const";
+import { initCookie } from "./initCookie";
 
 export class SheetWarp {
   name: string = '';
@@ -18,6 +19,7 @@ export class SheetWarp {
   
   async init(){
     if(!IS_DEV){
+      await initCookie(this.page.context());
       await this.page.goto(E2E_SHEET_ENDPOINT);
     }
 
