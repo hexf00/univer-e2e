@@ -1,33 +1,32 @@
-import { Page, expect } from "playwright/test";
-import { E2E_DOC_ENDPOINT, E2E_SHEET_ENDPOINT, INPUT_DELAY, IS_DEV } from "./const";
-import { initCookie } from "./initCookie";
+import type { Page } from 'playwright/test'
+import { E2E_DOC_ENDPOINT, INPUT_DELAY, IS_DEV } from './const'
+import { initCookie } from './initCookie'
 
 export class DocWarp {
-  name: string = '';
-  page: Page;
+  name: string = ''
+  page: Page
 
-  constructor ({
+  constructor({
     name = 'defaultPage',
-    page
+    page,
   }: {
-    name?: string;
-    page: Page;
+    name?: string
+    page: Page
   }) {
-    this.name = name;
-    this.page = page;
+    this.name = name
+    this.page = page
   }
 
-  async input (text = 'Hello Univer!') {
-    const { page } = this;
-    await page.keyboard.type(text, { delay: INPUT_DELAY });
-    await page.keyboard.press('Enter');
+  async input(text = 'Hello Univer!') {
+    const { page } = this
+    await page.keyboard.type(text, { delay: INPUT_DELAY })
+    await page.keyboard.press('Enter')
   }
 
-
-  async init () {
+  async init() {
     if (!IS_DEV) {
-      await initCookie(this.page.context());
-      await this.page.goto(E2E_DOC_ENDPOINT);
+      await initCookie(this.page.context())
+      await this.page.goto(E2E_DOC_ENDPOINT)
     }
 
     // await this.page.waitForLoadState('domcontentloaded');
@@ -38,11 +37,11 @@ export class DocWarp {
       return window.univerAPI
     }, undefined, {
       timeout: 3000,
-      polling: 500
+      polling: 500,
     })
   }
 
-  dispose () {
+  dispose() {
 
   }
 }

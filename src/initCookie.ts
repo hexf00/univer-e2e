@@ -1,11 +1,9 @@
-import { BrowserContext } from '@playwright/test';
-import { E2E_COOKIE_DOMAIN, E2E_COOKIE_NAME, E2E_COOKIE_VALUE } from './const';
+import type { BrowserContext } from '@playwright/test'
+import { E2E_COOKIE_DOMAIN, E2E_COOKIE_NAME, E2E_COOKIE_VALUE } from './const'
 
-
-export const initCookie = async (context: BrowserContext) => {
-
+export async function initCookie(context: BrowserContext) {
   if (!E2E_COOKIE_NAME || !E2E_COOKIE_VALUE || !E2E_COOKIE_DOMAIN) {
-    throw new Error('`E2E_COOKIE_NAME`, `E2E_COOKIE_VALUE`, `E2E_COOKIE_DOMAIN` must be set in the environment variables');
+    throw new Error('`E2E_COOKIE_NAME`, `E2E_COOKIE_VALUE`, `E2E_COOKIE_DOMAIN` must be set in the environment variables')
   }
 
   await context.addCookies([
@@ -17,6 +15,6 @@ export const initCookie = async (context: BrowserContext) => {
       expires: -1,
       secure: true,
       sameSite: 'None',
-    }
-  ]);
-};
+    },
+  ])
+}

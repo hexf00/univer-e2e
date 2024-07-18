@@ -1,39 +1,40 @@
-import { ConsoleMessage, Page, expect } from "playwright/test";
-import { isARealError } from "./isARealError";
+import type { ConsoleMessage, Page } from 'playwright/test'
+import { expect } from 'playwright/test'
+import { isARealError } from './isARealError'
 
 export class ErrorManager {
-  name: string = '';
-  errors: ConsoleMessage[] = [];
+  name: string = ''
+  errors: ConsoleMessage[] = []
 
-  disposes: (() => void)[] = [];
+  disposes: (() => void)[] = []
 
-  constructor ({
+  constructor({
     name = 'defaultPage',
-    page
+    page,
   }: {
-    name?: string;
-    page: Page;
+    name?: string
+    page: Page
   }) {
-    this.name = name;
-    this.init(page);
+    this.name = name
+    this.init(page)
   }
 
-  init (page: Page) {
+  init(page: Page) {
     const onConsole = (msg: ConsoleMessage) => {
       if (msg.type() === 'error') {
-        this.errors.push(msg);
+        this.errors.push(msg)
         if (isARealError(msg)) {
-          expect(msg.location().url + '\t' + msg.text()).toBe('Discovered error');
+          expect(`${msg.location().url}\t${msg.text()}`).toBe('Discovered error')
         }
       }
     }
 
-    page.on('console', onConsole);
+    page.on('console', onConsole)
     this.disposes.push(() => {
-      page.off('console', onConsole);
-    });
+      page.off('console', onConsole)
+    })
 
-    const onPageError = (msg :Error) => {
+    const onPageError = (msg: Error) => {
       onConsole({
         type: () => 'error',
         text: () => msg.message,
@@ -43,29 +44,29 @@ export class ErrorManager {
           return {
             url: page.url(),
             lineNumber: 0,
-            columnNumber: 0
+            columnNumber: 0,
           }
-        }
-      });
+        },
+      })
     }
-    page.on('pageerror', onPageError);
+    page.on('pageerror', onPageError)
     this.disposes.push(() => {
-      console.log(`\x1b[43mErrorManager dispose page ${this.name}\x1b[0m`);
-      page.off('pageerror', onPageError);
-    });
+      console.log(`\x1B[43mErrorManager dispose page ${this.name}\x1B[0m`)
+      page.off('pageerror', onPageError)
+    })
   }
 
-  assertNoError () {
+  assertNoError() {
     // background yellow
-    console.log(`\x1b[43m${this.errors.length} errors found in page ${this.name}: \x1b[0m`);
-    console.log(this.errors.map((e) => e.text() + '\t' + e.location().url).join('\n'));
+    console.log(`\x1B[43m${this.errors.length} errors found in page ${this.name}: \x1B[0m`)
+    console.log(this.errors.map(e => `${e.text()}\t${e.location().url}`).join('\n'))
   }
 
-  dispose () {
+  dispose() {
     this.disposes.forEach((dispose) => {
-      dispose();
-    });
-    this.disposes = [];
-    this.errors = [];
+      dispose()
+    })
+    this.disposes = []
+    this.errors = []
   }
 }

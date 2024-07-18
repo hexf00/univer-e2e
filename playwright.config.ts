@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test'
 
 /**
  * Read environment variables from file.
@@ -22,7 +22,7 @@ export default defineConfig({
   // workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    // ['line'],  
+    // ['line'],
     ['list'],
     // ['dot'],
     // ['json', { outputFile: './playwright-report/test-results.json' }],
@@ -35,5 +35,5 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-  ]
-});
+  ],
+})

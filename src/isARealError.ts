@@ -1,19 +1,19 @@
-import { ConsoleMessage } from "playwright";
+import type { ConsoleMessage } from 'playwright'
 
-export const isARealError = (error: ConsoleMessage) => {
+export function isARealError(error: ConsoleMessage) {
   if ([
-    'Failed to load resource: the server responded with a status of 404 ()'
+    'Failed to load resource: the server responded with a status of 404 ()',
   ].includes(error.text())) {
-    return false;
+    return false
   }
 
   if (error.text().includes('hook already exists')) {
-    return false;
+    return false
   }
 
-  if(error.location().url.includes('favicon.ico')){
-    return false;
+  if (error.location().url.includes('favicon.ico')) {
+    return false
   }
 
-  return true;
-};
+  return true
+}

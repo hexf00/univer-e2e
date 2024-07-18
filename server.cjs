@@ -1,48 +1,50 @@
-const express = require('express');
-const { chromium } = require('playwright');
-const bodyParser = require('body-parser');
+const express = require('express')
+const { chromium } = require('playwright')
+const bodyParser = require('body-parser')
 
-const { expect } = require('@playwright/test');
+const { expect } = require('@playwright/test')
 
-function stripColorCodes (errorString) {
-  const ansiRegex = /\x1b\[[0-9;]*m/g;
-  return errorString.replace(ansiRegex, '');
+function stripColorCodes(errorString) {
+  const ansiRegex = /\x1B\[[0-9;]*m/g
+  return errorString.replace(ansiRegex, '')
 }
 
-const app = express();
-app.use(bodyParser.json());
+const app = express()
+app.use(bodyParser.json())
 
 let browser
 let context
 let page
 
 (async () => {
-  browser = await chromium.connectOverCDP('http://localhost:9222');
-  context = browser.contexts()[0];
-  page = await context.pages()[0];
-})();
+  browser = await chromium.connectOverCDP('http://localhost:9222')
+  context = browser.contexts()[0]
+  page = await context.pages()[0]
+})()
 
-const useCatch = async (fn, req, res) => {
+async function useCatch(fn, req, res) {
   try {
-    const reuslt = await fn(req, res);
-    res.send('Success' + JSON.stringify(reuslt));
-  } catch (error) {
-    res.send('Error: ' + stripColorCodes(error.message));
+    const reuslt = await fn(req, res)
+    res.send(`Success${JSON.stringify(reuslt)}`)
+  }
+  catch (error) {
+    res.send(`Error: ${stripColorCodes(error.message)}`)
   }
 }
 
 app.get('/', (req, res) => {
-  res.send('Server is running');
-});
+  res.send('Server is running')
+})
 
-app.post('/test', (req, res) => useCatch(async (req, res) => {
+app.post('/test', (req, res) => useCatch(async (req, _res) => {
   if (!req.body.code) {
-    throw new Error('code is required');
+    throw new Error('code is required')
   }
-  const fn = new Function('return async ({context, page, expect}) =>{' + req.body.code + '}');
+  // eslint-disable-next-line no-new-func
+  const fn = new Function(`return async ({context, page, expect}) =>{${req.body.code}}`)
   return await fn()({ context, page, expect })
-}, req, res));
+}, req, res))
 
 app.listen(3110, () => {
-  console.log('Example app listening on port 3110!');
+  console.log('Example app listening on port 3110!')
 })

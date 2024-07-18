@@ -1,6 +1,8 @@
-import { DocWarp } from "./DocWarp";
-import { ErrorManager } from "./ErrorManager";
-import { SheetWarp } from "./SheetWarp";
+/* eslint-disable ts/naming-convention */
+
+import type { DocWarp } from './DocWarp'
+import type { ErrorManager } from './ErrorManager'
+import type { SheetWarp } from './SheetWarp'
 
 declare global {
   interface Window {
@@ -8,12 +10,12 @@ declare global {
   }
 }
 
-declare module "playwright/test" {
+declare module 'playwright/test' {
   interface Page {
-    errorManager: ErrorManager;
-    sheetWarp: SheetWarp;
-    docWarp: DocWarp;
+    errorManager: ErrorManager
+    sheetWarp: SheetWarp
+    docWarp: DocWarp
   }
 }
 
-export { };
+export { }
