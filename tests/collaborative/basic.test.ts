@@ -35,7 +35,7 @@ test('Univer Collaborative Basic', async () => {
   const testText = 'Hello Univer!';
   await userPageManager.pageDoSomething('user1', async (page) => {
     // dblclick A1 cell to open the editor
-    await page.locator('.univer-app-container-canvas > canvas.univer-render-canvas').dblclick({
+    await page.locator('.univer-workbench-container-canvas > canvas.univer-render-canvas').dblclick({
       position: {
         x: 88,
         y: 29

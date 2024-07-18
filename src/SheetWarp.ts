@@ -16,9 +16,9 @@ export class SheetWarp {
     this.name = name;
     this.page = page;
   }
-  
+
   async init(){
-    if(!IS_DEV){
+    if (!IS_DEV) {
       await initCookie(this.page.context());
       await this.page.goto(E2E_SHEET_ENDPOINT);
     }
@@ -40,10 +40,18 @@ export class SheetWarp {
     await page.locator('svg.univerjs-icon-increase-single').first().click();
   }
 
+  getEditorDom () {
+    const { page } = this;
+
+    // page.locator('.univer-app-container-canvas > canvas.univer-render-canvas') // <= 0.2.3
+
+    return page.locator('.univer-workbench-container-canvas > canvas.univer-render-canvas');
+  }
+
   async inputA1 (text = 'Hello Univer!') {
     const { page } = this;
 
-    await page.locator('.univer-app-container-canvas > canvas.univer-render-canvas').dblclick({
+    await this.getEditorDom().dblclick({
       position: {
         x: 88,
         y: 29
