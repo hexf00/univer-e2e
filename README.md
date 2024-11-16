@@ -41,9 +41,19 @@ E2E_SHEET_ENDPOINT=http://localhost:5173/ pnpm e2e -g "Univer Sheet"
 
 1. [x] 2 Collaborative editing with 2 clients
 2. [ ] formula input
+  1. [ ] ref
+  2. [ ] calc
 3. [x] Error log discovery
 4. [x] tabs switch / tabs add
 5. [x] random mouse move / wheel
+6. [ ] image uplaod
+7. [ ] xlsx import
+
+### Collaborative License
+
+```bash
+pnpm e2e  -g "Collaborative" --headed --repeat-each=20 --workers=6
+```
 
 ### doc
 

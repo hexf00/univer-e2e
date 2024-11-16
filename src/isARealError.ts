@@ -7,6 +7,10 @@ export function isARealError(error: ConsoleMessage) {
     return false
   }
 
+  if (error.text().includes('@univerjs/facade and @univerjs-pro/facade is deprecated and will be removed in v0.6.0')) {
+    return false
+  }
+
   if (error.text().includes('hook already exists')) {
     return false
   }

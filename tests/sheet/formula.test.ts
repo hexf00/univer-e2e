@@ -1,8 +1,8 @@
-import { expect } from 'playwright/test'
 import { ErrorManager } from '@/ErrorManager'
 import { SheetWarp } from '@/SheetWarp'
 import { CASE_TIMEOUT } from '@/const'
 import { warpPlaywright } from '@/warpPlaywright'
+import { expect } from 'playwright/test'
 
 const { test } = await warpPlaywright()
 
@@ -17,6 +17,7 @@ test.beforeEach(async ({ page }) => {
 
 test.afterEach(async ({ page }) => {
   page.errorManager.assertNoError()
+
   page.errorManager.dispose()
   page.errorManager = null!
   page.sheetWarp.dispose()
@@ -25,28 +26,30 @@ test.afterEach(async ({ page }) => {
 
 test.setTimeout(CASE_TIMEOUT)
 
-test('Univer Sheet Tab', async ({ page }) => {
-  const { sheetWarp: sheet } = page
-
+test('Univer Sheet Formula', async ({ page }) => {
   await page.sheetWarp.init({
     isOSS: true,
   })
 
-  const count = await sheet.getTabs()
+  const actualValue = await page.evaluate(() => {
+    const univerAPI = window.univerAPI
+    const activeSheet = univerAPI.getActiveWorkbook()!.getActiveSheet()
+    activeSheet.getRange('A1').setValue('=1+1')
+    
+ 
 
-  await sheet.addSheet()
-  expect(await sheet.getTabs()).toBe(count + 1)
+    
+    
+    return activeSheet.getRange('A1').getValue()
+  })
 
-  await sheet.inputA1('Hello Sheet1')
-  await sheet.checkA1('Hello Sheet1')
+  await page.waitForFunction(() => {  
+  
+      const value = window.univerAPI.getActiveWorkbook()!.getActiveSheet().getRange('A1').getValue()
+      if (value === 2) {
+        return true
+      }
+      return false
+  }, {timeout: 1000})
 
-  await sheet.addSheet()
-  await sheet.inputA1('Hello Sheet2')
-  await sheet.checkA1('Hello Sheet2')
-
-  await sheet.switchTab(count)
-  await sheet.checkA1('Hello Sheet1')
-
-  await sheet.switchTab(count + 1)
-  await sheet.checkA1('Hello Sheet2')
 })

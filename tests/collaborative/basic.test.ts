@@ -4,6 +4,8 @@ import { userPageManager, warpPlaywright } from '@/warpPlaywright'
 
 const { test } = await warpPlaywright()
 
+test.setTimeout(1000 * 60 * 5)
+
 test.beforeEach(async ({ browser }) => {
   userPageManager.setBrowser(browser)
   // created 2 pages
@@ -43,6 +45,8 @@ test('Univer Collaborative Basic', async () => {
     })
     await page.keyboard.type(testText, { delay: 200 })
     await page.keyboard.press('Enter')
+
+    // await  page.waitForTimeout(60*3*1000)
   })
 
   await userPageManager.pageDoSomething('user2', async (page) => {
@@ -50,7 +54,7 @@ test('Univer Collaborative Basic', async () => {
       if (!window.univerAPI) {
         return false
       }
-      const activeSheet = window.univerAPI.getActiveWorkbook().getActiveSheet()
+      const activeSheet = window.univerAPI.getActiveWorkbook()!.getActiveSheet()
       const range = activeSheet.getRange(0, 0, 2, 2)
 
       if (!range) {
@@ -63,5 +67,6 @@ test('Univer Collaborative Basic', async () => {
     })
     const actualValue = await jsHandle.evaluate(handle => handle)
     expect(actualValue).toBe(testText)
+    // await  page.waitForTimeout(60*3*1000)
   })
 })

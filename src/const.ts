@@ -5,6 +5,7 @@ dotenv.config()
 export const IS_DEV = process.env.NODE_ENV === 'development'
 
 export const E2E_SHEET_ENDPOINT = process.env.E2E_SHEET_ENDPOINT || 'http://localhost:3000'
+export const E2E_SHEET_ENDPOINT_OSS = process.env.E2E_SHEET_ENDPOINT_OSS || 'http://localhost:3000'
 
 export const E2E_DOC_ENDPOINT = process.env.E2E_DOC_ENDPOINT || 'http://localhost:3000'
 

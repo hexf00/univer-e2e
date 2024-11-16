@@ -1,5 +1,5 @@
 /* eslint-disable ts/naming-convention */
-
+import type { FUniver } from '@univerjs/facade'
 import type { DocWarp } from './DocWarp'
 import type { ErrorManager } from './ErrorManager'
 import type { SheetWarp } from './SheetWarp'

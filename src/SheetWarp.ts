@@ -1,6 +1,6 @@
 import type { Page } from 'playwright/test'
 import { expect } from 'playwright/test'
-import { E2E_SHEET_ENDPOINT, INPUT_DELAY, IS_DEV } from './const'
+import { E2E_SHEET_ENDPOINT, E2E_SHEET_ENDPOINT_OSS, INPUT_DELAY, IS_DEV } from './const'
 import { initCookie } from './initCookie'
 
 export class SheetWarp {
@@ -18,10 +18,13 @@ export class SheetWarp {
     this.page = page
   }
 
-  async init() {
+  async init({ isOSS = false }: { isOSS?: boolean } = {}) {
     if (!IS_DEV) {
-      await initCookie(this.page.context())
-      await this.page.goto(E2E_SHEET_ENDPOINT)
+      const url = isOSS ? E2E_SHEET_ENDPOINT_OSS : E2E_SHEET_ENDPOINT
+      if (isOSS) {
+        await initCookie(this.page.context())
+      }
+      await this.page.goto(url)
     }
 
     // await this.page.waitForLoadState('domcontentloaded');
@@ -68,7 +71,7 @@ export class SheetWarp {
       if (!window.univerAPI) {
         return false
       }
-      const activeSheet = window.univerAPI.getActiveWorkbook().getActiveSheet()
+      const activeSheet = window.univerAPI.getActiveWorkbook()!.getActiveSheet()
       const range = activeSheet.getRange(0, 0, 2, 2)
 
       if (!range) {
