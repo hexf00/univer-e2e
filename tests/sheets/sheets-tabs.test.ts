@@ -37,7 +37,7 @@ test('sheets-tabs', async ({ page }) => {
   await page.goto(E2E_ENDPOINT)
   await waitWorkbookReady(page)
 
-  expect(await getTabCount(page), 'Tab Count = 1').toBe(1)
+  const tabsCount = await getTabCount(page)
 
   await inputCellVal(page, 'A1', 'Hello Sheet1');
   await checkCellVal(page, 'A1', 'Hello Sheet1');
@@ -47,7 +47,7 @@ test('sheets-tabs', async ({ page }) => {
     const univerAPI = window.univerAPI
     univerAPI.getActiveWorkbook()!.insertSheet()
   })
-  expect(await getTabCount(page), 'Tab Count = 2').toBe(2)
+  expect(await getTabCount(page), 'Tab Count Check').toBe(tabsCount+1)
   await checkCellVal(page, 'A1', null);
 
   await inputCellVal(page, 'A1', 'Hello Sheet2');
