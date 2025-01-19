@@ -63,6 +63,5 @@ test('sheets-collaboration', async () => {
     timeout: 3000,
     polling: 500,
   });
-  const actualValue = await jsHandle.jsonValue();
-  expect(actualValue).toBe(testText)
+  expect(await jsHandle.jsonValue()).toBe(testText)
 })
