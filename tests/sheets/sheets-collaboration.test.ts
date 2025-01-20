@@ -28,8 +28,11 @@ test.beforeEach(async ({ browser }) => {
     await page2.goto(currentUrl)
   }
 
-  await waitWorkbookReady(page1)
-  await waitWorkbookReady(page2)
+  // 加了反而报错，可能太快执行完成
+  // await Promise.all([
+  //   waitWorkbookReady(page1),
+  //   waitWorkbookReady(page2),
+  // ])
 
   // Store pages in module scope
   pages = {
