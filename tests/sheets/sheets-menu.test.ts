@@ -9,10 +9,10 @@ test('sheets-menu', async ({ page }) => {
   await waitWorkbookReady(page)
 
   const fontIcon = page.locator('.univer-toolbar .univerjs-icon-font-color')
-  await fontIcon.waitFor({ state: 'attached', timeout: 1000 });
+  await fontIcon.waitFor({ state: 'attached', timeout: 1000 })
   fontIcon.locator('..').locator('..').locator('.univerjs-icon-more-down-single').click()
 
-  const menu = page.locator('.univer-menu');
-  await menu.waitFor({ state: 'attached', timeout: 1000 });
+  const menu = page.locator('.univer-menu')
+  await menu.waitFor({ state: 'attached', timeout: 1000 })
   await expect(menu).toBeVisible()
 })

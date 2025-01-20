@@ -1,9 +1,9 @@
-import { expect, test, type Page } from '@playwright/test'
+import { type Page, expect, test } from '@playwright/test'
 import { CASE_TIMEOUT, E2E_ENDPOINT } from '@/const'
 import { } from 'playwright'
 import { waitWorkbookReady } from '@/utils/waitWorkbookReady'
 
-const checkCellVal = async (page: Page, range: string, expected: string|null) => {
+async function checkCellVal(page: Page, range: string, expected: string | null) {
   await page.waitForFunction(({ range, expected }) => {
     const univerAPI = window.univerAPI
     const sheet = univerAPI.getActiveWorkbook()!.getActiveSheet()
@@ -11,19 +11,19 @@ const checkCellVal = async (page: Page, range: string, expected: string|null) =>
   }, { range, expected }, { timeout: 1000 })
 }
 
-const getTabCount = async (page: Page) => {
+async function getTabCount(page: Page) {
   return await page.evaluate(() => {
     const univerAPI = window.univerAPI
     return univerAPI.getActiveWorkbook()!.getSheets().length
   })
 }
 
-const switchTab = async (page: Page, index: number) => {
+async function switchTab(page: Page, index: number) {
   const tab = page.locator(`.univer-slide-tab-bar > div:nth-child(${index})`)
   await tab.click()
 }
 
-const inputCellVal = async (page: Page, range: string, val: string) => {
+async function inputCellVal(page: Page, range: string, val: string) {
   await page.evaluate(({ range, val }) => {
     const univerAPI = window.univerAPI
     const sheet = univerAPI.getActiveWorkbook()!.getActiveSheet()
@@ -38,24 +38,29 @@ test('sheets-tabs', async ({ page }) => {
   await waitWorkbookReady(page)
 
   const tabsCount = await getTabCount(page)
+  // insert sheet
+  await page.evaluate(() => {
+    const univerAPI = window.univerAPI
+    univerAPI.getActiveWorkbook()!.insertSheet()
+  })
 
-  await inputCellVal(page, 'A1', 'Hello Sheet1');
-  await checkCellVal(page, 'A1', 'Hello Sheet1');
+  await inputCellVal(page, 'A1', 'Hello Sheet1')
+  await checkCellVal(page, 'A1', 'Hello Sheet1')
 
   // insert sheet
   await page.evaluate(() => {
     const univerAPI = window.univerAPI
     univerAPI.getActiveWorkbook()!.insertSheet()
   })
-  expect(await getTabCount(page), 'Tab Count Check').toBe(tabsCount+1)
-  await checkCellVal(page, 'A1', null);
+  expect(await getTabCount(page), 'Tab Count Check').toBe(tabsCount + 2)
+  await checkCellVal(page, 'A1', null)
 
-  await inputCellVal(page, 'A1', 'Hello Sheet2');
+  await inputCellVal(page, 'A1', 'Hello Sheet2')
   await checkCellVal(page, 'A1', 'Hello Sheet2')
 
-  await switchTab(page, 1)
+  await switchTab(page, tabsCount + 1)
   await checkCellVal(page, 'A1', 'Hello Sheet1')
 
-  await switchTab(page, 2)
+  await switchTab(page, tabsCount + 2)
   await checkCellVal(page, 'A1', 'Hello Sheet2')
 })

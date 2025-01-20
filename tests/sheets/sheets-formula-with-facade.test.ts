@@ -4,7 +4,7 @@ import { waitWorkbookReady } from '@/utils/waitWorkbookReady'
 
 test.setTimeout(CASE_TIMEOUT)
 
-test('sheets-formula', async ({ page }) => {
+test('sheets-formula-facade', async ({ page }) => {
   await page.goto(E2E_ENDPOINT)
   await waitWorkbookReady(page)
 
@@ -27,20 +27,11 @@ test('sheets-formula', async ({ page }) => {
     return sheet.getRange('A1').getValue() === 2
   }, undefined, { timeout: 1000 })
 
-  await page.locator('.univer-workbench-container-canvas > canvas.univer-render-canvas').dblclick({
-    position: {
-      x: 88,
-      y: 29,
-    },
-    timeout: 10000,
-  })
-  await page.keyboard.press('Control+A')
-  await page.keyboard.press('Delete')
-  await page.keyboard.type('hi', { delay: 120 })
-  await page.keyboard.press('Enter')
   expect(await page.evaluate(async () => {
     const univerAPI = window.univerAPI
     const sheet = univerAPI.getActiveWorkbook()!.getActiveSheet()
+    sheet.getRange('A1').setValue('hello')
+    await new Promise(resolve => setTimeout(() => resolve(''), 1000))
     return sheet.getRange('A1').getValue()
-  })).toBe('hi')
+  })).toBe('hello')
 })
